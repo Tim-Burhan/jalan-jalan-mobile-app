@@ -9,6 +9,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 
 import Welcome from './src/screens/Welcome';
 import Signup from './src/screens/Signup';
+import Login from './src/screens/Login';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -26,6 +27,11 @@ const App = props => {
           <Stack.Screen
             name="Signup"
             component={Signup}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
