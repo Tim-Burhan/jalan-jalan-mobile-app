@@ -4,13 +4,14 @@ import {
   View,
   TextInput,
   StyleSheet,
-  Image,
-  ImageBackground,
   FlatList,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import CardHome from '../components/CardHome';
 
 export default class Home extends Component {
   constructor(props) {
@@ -70,8 +71,11 @@ export default class Home extends Component {
             <View style={styles.textInput}>
               <MaterialIcons color={'#A3A3A3'} name="search" size={32} />
               <TextInput
-                style={[styles.grey, styles.fontSemiBold, {width: '90%'}]}
-                secureTextEntry={true}
+                style={[
+                  styles.grey,
+                  styles.fontSemiBold,
+                  styles.widthTextInput,
+                ]}
                 placeholder="Where you want to go?"
               />
             </View>
@@ -94,39 +98,83 @@ export default class Home extends Component {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               data={this.state.destinations}
-              renderItem={({item}) => (
-                <View style={styles.containerCard}>
-                  <ImageBackground
-                    source={{
-                      uri: `${item.image}`,
-                    }}
-                    resizeMode="cover"
-                    borderRadius={30}
-                    style={styles.imageBackground}>
-                    <View style={styles.count}>
-                      <Text style={[styles.fontBold, {color: 'white'}]}>
-                        {item.count} airlines
-                      </Text>
-                    </View>
-                    <View>
-                      <View>
-                        <Text>{item.city}</Text>
-                        <Text>{item.country}</Text>
-                      </View>
-                    </View>
-                  </ImageBackground>
-                </View>
-              )}
+              renderItem={({item}) => <CardHome data={item} />}
             />
           </View>
         </View>
-        <View style={styles.wrapperTopDes} />
+        <View style={styles.wrapperTopDes}>
+          <View style={styles.wrapperSubtitle}>
+            <Text style={[styles.fontSemiBold, styles.subtitle2]}>
+              Top 3 destinations
+            </Text>
+          </View>
+          <View style={styles.wrapperDes}>
+            <View style={styles.containerDes}>
+              <View style={styles.des}>
+                <Image
+                  style={styles.desImage}
+                  source={{
+                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                  }}
+                />
+              </View>
+              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+            </View>
+            <View style={styles.containerDes}>
+              <View style={styles.des}>
+                <Image
+                  style={styles.desImage}
+                  source={{
+                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                  }}
+                />
+              </View>
+              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+            </View>
+            <View style={styles.containerDes}>
+              <View style={styles.des}>
+                <Image
+                  style={styles.desImage}
+                  source={{
+                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                  }}
+                />
+              </View>
+              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+            </View>
+            <View style={styles.containerDes}>
+              <View style={styles.des}>
+                <Image
+                  style={styles.desImage}
+                  source={{
+                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                  }}
+                />
+              </View>
+              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+            </View>
+            <View style={styles.containerDes}>
+              <View style={styles.des}>
+                <Image
+                  style={styles.desImage}
+                  source={{
+                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                  }}
+                />
+              </View>
+              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+            </View>
+          </View>
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  widthTextInput: {
+    width: '90%',
+  },
   fontBold: {
     fontFamily: 'Poppins-Bold',
   },
@@ -161,7 +209,7 @@ const styles = StyleSheet.create({
   },
   wrapperTopDes: {
     flex: 3,
-    backgroundColor: 'red',
+    alignItems: 'center',
   },
   wrapperNav: {
     flexDirection: 'row',
@@ -174,11 +222,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  wrapperDes: {
+    flex: 2,
+    flexDirection: 'row',
+    marginLeft: '16%',
+    width: '100%',
+    alignItems: 'center',
+  },
   wrapperCard: {
     flex: 8,
     width: '100%',
     alignItems: 'flex-end',
     justifyContent: 'center',
+  },
+  wrapperCity: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
   },
   title: {
     width: '55%',
@@ -201,37 +262,33 @@ const styles = StyleSheet.create({
     fontSize: 18,
     width: '68%',
   },
+  subtitle2: {
+    fontSize: 18,
+    width: '84%',
+  },
   viewAll: {
     fontSize: 16,
-  },
-  containerCard: {
-    width: 240,
-    height: '90%',
-    borderRadius: 30,
-    marginTop: 20,
-    marginRight: 25,
-  },
-  imageBackground: {
-    flex: 1,
-    borderRadius: 30,
-    paddingHorizontal: 30,
-    opacity: 0.7,
-    backgroundColor: '#000',
-    zIndex: 0,
   },
   flatListCard: {
     width: '92%',
     height: '90%',
   },
-  count: {
-    width: 100,
-    height: 40,
-    backgroundColor: 'white',
+  containerDes: {
+    alignItems: 'center',
+    marginRight: '4%',
+  },
+  des: {
+    width: 60,
+    height: 60,
+    borderRadius: 999,
+    borderColor: '#0ac77b',
+    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    opacity: 0.9,
-    zIndex: 99,
-    borderRadius: 9999,
-    marginTop: '15%',
+  },
+  desImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 999,
   },
 });
