@@ -12,9 +12,9 @@ import * as Yup from 'yup';
 import BackButton from '../components/BackButton';
 
 const validationSchema = Yup.object().shape({
-  fullName: Yup.string().min(8, 'Minimal 10 character!').required(''),
-  email: Yup.string().email('Email tidak valid!').required(''),
-  password: Yup.string().min(8, 'Minimal 8 character!').required(''),
+  fullName: Yup.string().min(8, 'Minimum 10 Characters!').required(''),
+  email: Yup.string().email('Invalid Email!').required(''),
+  password: Yup.string().min(8, 'Minimum 8 Characters!').required(''),
 });
 
 export default class Signup extends Component {

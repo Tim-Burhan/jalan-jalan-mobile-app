@@ -16,11 +16,16 @@ import Fingerprint from '../../assets/fingerprint.png';
 import BackButton from '../components/BackButton';
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('Email tidak valid!').required(''),
-  password: Yup.string().min(8, 'Minimal 8 character!').required(''),
+  email: Yup.string().email('Invalid Email!!').required(''),
+  password: Yup.string().min(8, 'Minimum 8 Characters!').required(''),
 });
 
 export default class Login extends Component {
+  login = values => {
+    console.log(values);
+    this.props.navigation.navigate('Dashboard');
+  };
+
   render() {
     return (
       <View style={styles.wrapper}>
@@ -32,7 +37,7 @@ export default class Login extends Component {
           <Formik
             validationSchema={validationSchema}
             initialValues={{email: '', password: ''}}
-            onSubmit={values => console.log(values)}>
+            onSubmit={values => this.login(values)}>
             {({handleChange, handleBlur, handleSubmit, errors, values}) => (
               <View style={styles.wrapperInput}>
                 <TextInput
@@ -73,7 +78,10 @@ export default class Login extends Component {
                   style={[styles.fontRegular, styles.grey, styles.textForgot]}>
                   Did you forgot your password?
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate('ForgotPassword')
+                  }>
                   <Text
                     style={[
                       styles.fontRegular,
