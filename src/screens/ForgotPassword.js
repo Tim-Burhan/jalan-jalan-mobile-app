@@ -51,6 +51,9 @@ export default class ForgotPassword extends Component {
                     Send
                   </Text>
                 </TouchableOpacity>
+                <Text style={[styles.grey, styles.fontSemiBold]}>
+                  You’ll get message soon on your email
+                </Text>
               </View>
             )}
           </Formik>

@@ -105,7 +105,7 @@ export default class Home extends Component {
         <View style={styles.wrapperTopDes}>
           <View style={styles.wrapperSubtitle}>
             <Text style={[styles.fontSemiBold, styles.subtitle2]}>
-              Top 3 destinations
+              Top 10 destinations
             </Text>
           </View>
           <View style={styles.wrapperDes}>
