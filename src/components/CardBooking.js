@@ -36,7 +36,7 @@ const CardBooking = props => {
           <Text style={[styles.fontSemiBold, styles.grey, styles.status]}>
             Status
           </Text>
-          <TouchableOpacity style={styles.label}>
+          <TouchableOpacity onPress={props.func} style={styles.label}>
             <Text style={[styles.fontSemiBold, styles.white]}>
               {props.data.status}
             </Text>

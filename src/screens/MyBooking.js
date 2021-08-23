@@ -1,8 +1,18 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Image,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CardBooking from '../components/CardBooking';
 import ChatButton from '../components/ChatButton';
+
+import logoGrey from '../../assets/logoGrey.png';
 
 export default class MyBooking extends Component {
   constructor(props) {
@@ -28,12 +38,62 @@ export default class MyBooking extends Component {
           status: 'Waiting for payment',
         },
       ],
+      modalVisible: false,
     };
   }
 
+  setModalVisible = visible => {
+    this.setState({modalVisible: visible});
+  };
+
   render() {
+    const {modalVisible} = this.state;
     return (
       <View style={styles.wrapper}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.modalTop}>
+                <Text style={styles.fontRegular}>
+                  Monday, 20 July ‘20 - 12:33
+                </Text>
+                <View style={styles.wrapperDes}>
+                  <Text style={[styles.fontSemiBold, styles.font20]}>IDN</Text>
+                  <Image style={styles.logoGrey} source={logoGrey} />
+                  <Text style={[styles.fontSemiBold, styles.font20]}>ENG</Text>
+                </View>
+                <Text style={[styles.fontRegular, styles.grey]}>
+                  Fly Emirates, AC-456
+                </Text>
+                <View style={styles.label}>
+                  <Text style={[styles.fontSemiBold, styles.white]}>
+                    Waiting For Payment
+                  </Text>
+                </View>
+              </View>
+              <TouchableOpacity style={[styles.buttonConfirm, styles.bgGreen]}>
+                <Text
+                  style={[styles.fontSemiBold, styles.font20, styles.white]}>
+                  Confirm Payment
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.setModalVisible(!modalVisible)}
+                style={[styles.buttonConfirm, styles.bgBlue]}>
+                <Text style={[styles.fontRegular, styles.font20, styles.white]}>
+                  Close
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         <View style={styles.wrapperHeader}>
           <View style={styles.wrapperNav}>
             <Text style={[styles.fontBold, styles.title]}>My Booking</Text>
@@ -53,7 +113,12 @@ export default class MyBooking extends Component {
           <FlatList
             style={styles.flatList}
             data={this.state.booking}
-            renderItem={({item}) => <CardBooking data={item} />}
+            renderItem={({item}) => (
+              <CardBooking
+                data={item}
+                func={() => this.setModalVisible(true)}
+              />
+            )}
           />
         </View>
       </View>
@@ -62,6 +127,9 @@ export default class MyBooking extends Component {
 }
 
 const styles = StyleSheet.create({
+  font20: {
+    fontSize: 20,
+  },
   fontBold: {
     fontFamily: 'Poppins-Bold',
   },
@@ -73,6 +141,12 @@ const styles = StyleSheet.create({
   },
   green: {
     color: '#0ac77b',
+  },
+  bgGreen: {
+    backgroundColor: '#4FCF4D',
+  },
+  bgBlue: {
+    backgroundColor: '#2196F3',
   },
   white: {
     color: '#fff',
@@ -112,5 +186,75 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '86%',
     height: '100%',
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  modalView: {
+    width: '100%',
+    height: '50%',
+    backgroundColor: 'white',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    padding: '10%',
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.8,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  wrapperDes: {
+    flexDirection: 'row',
+  },
+  logoGrey: {
+    width: 20,
+    height: 19,
+    marginHorizontal: 10,
+  },
+  modalTop: {
+    width: '100%',
+    paddingVertical: '5%',
+    marginBottom: '2%',
+    borderBottomWidth: 2,
+    borderBottomColor: '#595959',
+  },
+  label: {
+    backgroundColor: '#FF7F23',
+    height: 40,
+    width: '60%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  buttonConfirm: {
+    height: '17%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginVertical: '2%',
   },
 });
