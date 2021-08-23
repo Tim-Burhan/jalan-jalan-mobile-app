@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CardBooking from '../components/CardBooking';
+import ChatButton from '../components/ChatButton';
 
 export default class MyBooking extends Component {
   constructor(props) {
@@ -36,13 +37,9 @@ export default class MyBooking extends Component {
         <View style={styles.wrapperHeader}>
           <View style={styles.wrapperNav}>
             <Text style={[styles.fontBold, styles.title]}>My Booking</Text>
-            <TouchableOpacity style={styles.icon}>
-              <MaterialCommunityIcons
-                color={'#595959'}
-                name="email-outline"
-                size={32}
-              />
-            </TouchableOpacity>
+            <ChatButton
+              func={() => this.props.navigation.navigate('ChatHome')}
+            />
             <TouchableOpacity style={styles.icon}>
               <MaterialCommunityIcons
                 color={'#595959'}
@@ -113,7 +110,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     flex: 1,
-    width: '85%',
+    width: '86%',
     height: '100%',
   },
 });

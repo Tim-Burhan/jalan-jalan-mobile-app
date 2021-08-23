@@ -15,6 +15,7 @@ import ForgotPassword from './src/screens/ForgotPassword';
 import Home from './src/screens/Home';
 import Profile from './src/screens/Profile';
 import MyBooking from './src/screens/MyBooking';
+import ChatHome from './src/screens/ChatHome';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -108,6 +109,11 @@ const App = props => {
           <Stack.Screen
             name="Dashboard"
             component={BottomTab}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChatHome"
+            component={ChatHome}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
