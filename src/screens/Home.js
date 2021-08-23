@@ -12,6 +12,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import CardHome from '../components/CardHome';
+import ChatButton from '../components/ChatButton';
 
 export default class Home extends Component {
   constructor(props) {
@@ -52,13 +53,9 @@ export default class Home extends Component {
         <View style={styles.wrapperHeader}>
           <View style={styles.wrapperNav}>
             <Text style={[styles.fontBold, styles.title]}>Explore</Text>
-            <TouchableOpacity style={styles.icon}>
-              <MaterialCommunityIcons
-                color={'#595959'}
-                name="email-outline"
-                size={32}
-              />
-            </TouchableOpacity>
+            <ChatButton
+              func={() => this.props.navigation.navigate('ChatHome')}
+            />
             <TouchableOpacity style={styles.icon}>
               <MaterialCommunityIcons
                 color={'#595959'}
