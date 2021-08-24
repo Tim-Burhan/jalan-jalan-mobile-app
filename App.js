@@ -17,6 +17,7 @@ import Profile from './src/screens/Profile';
 import MyBooking from './src/screens/MyBooking';
 import ChatHome from './src/screens/ChatHome';
 import EditProfile from './src/screens/EditProfile';
+import History from './src/screens/History';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -120,6 +121,11 @@ const App = props => {
           <Stack.Screen
             name="EditProfile"
             component={EditProfile}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="History"
+            component={History}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
