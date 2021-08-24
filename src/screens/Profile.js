@@ -48,7 +48,9 @@ export default class Profile extends Component {
         <View style={styles.wrapperHeader}>
           <View style={styles.wrapperNav}>
             <Text style={[styles.fontBold, styles.title]}>Profile</Text>
-            <TouchableOpacity style={styles.icon}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('EditProfile')}
+              style={styles.icon}>
               <Text style={[styles.green, styles.fontSemiBold, styles.font16]}>
                 Edit
               </Text>
