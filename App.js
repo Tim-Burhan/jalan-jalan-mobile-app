@@ -16,6 +16,7 @@ import Home from './src/screens/Home';
 import Profile from './src/screens/Profile';
 import MyBooking from './src/screens/MyBooking';
 import ChatHome from './src/screens/ChatHome';
+import EditProfile from './src/screens/EditProfile';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -114,6 +115,11 @@ const App = props => {
           <Stack.Screen
             name="ChatHome"
             component={ChatHome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
