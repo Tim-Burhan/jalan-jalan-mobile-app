@@ -35,7 +35,25 @@ export default class MyBooking extends Component {
           airlines: 'Fly Emirates',
           code: 'AF-224',
           date: 'Tuesday, 21 July ‘20 - 12:33',
-          status: 'Waiting for payment',
+          status: 'Payment success',
+        },
+        {
+          id: 3,
+          from: 'IDN',
+          destination: 'ENG',
+          airlines: 'Fly Emirates',
+          code: 'AF-224',
+          date: 'Tuesday, 21 July ‘20 - 12:33',
+          status: 'Payment success',
+        },
+        {
+          id: 4,
+          from: 'IDN',
+          destination: 'ENG',
+          airlines: 'Fly Emirates',
+          code: 'AF-224',
+          date: 'Tuesday, 21 July ‘20 - 12:33',
+          status: 'Payment success',
         },
       ],
       modalVisible: false,
@@ -113,6 +131,7 @@ export default class MyBooking extends Component {
           <FlatList
             style={styles.flatList}
             data={this.state.booking}
+            showsVerticalScrollIndicator={false}
             renderItem={({item}) => (
               <CardBooking
                 data={item}
