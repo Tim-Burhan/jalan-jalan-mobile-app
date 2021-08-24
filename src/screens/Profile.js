@@ -125,7 +125,9 @@ export default class Profile extends Component {
             </View>
           </View>
           <View style={styles.wrapperButton}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('History')}
+              style={styles.button}>
               <MaterialCommunityIcons
                 color={'#979797'}
                 name="lock-clock"
