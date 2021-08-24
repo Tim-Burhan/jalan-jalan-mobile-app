@@ -35,7 +35,7 @@ export default class MyBooking extends Component {
           airlines: 'Fly Emirates',
           code: 'AF-224',
           date: 'Tuesday, 21 July ‘20 - 12:33',
-          status: 'Payment success',
+          status: 'Payment successfully',
         },
         {
           id: 3,
@@ -133,10 +133,13 @@ export default class MyBooking extends Component {
             data={this.state.booking}
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => (
-              <CardBooking
-                data={item}
-                func={() => this.setModalVisible(true)}
-              />
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('BookingDetail')}>
+                <CardBooking
+                  data={item}
+                  func={() => this.setModalVisible(true)}
+                />
+              </TouchableOpacity>
             )}
           />
         </View>
