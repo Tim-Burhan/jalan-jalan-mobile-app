@@ -30,7 +30,10 @@ export default class Login extends Component {
     return (
       <View style={styles.wrapper}>
         <View style={styles.wrapperNav}>
-          <BackButton func={() => this.props.navigation.goBack()} />
+          <BackButton
+            color={'#000'}
+            func={() => this.props.navigation.goBack()}
+          />
         </View>
         <View style={styles.wrapperContent}>
           <Text style={[styles.fontBold, styles.title]}>Login</Text>

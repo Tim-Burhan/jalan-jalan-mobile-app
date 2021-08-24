@@ -6,7 +6,11 @@ const BackButton = props => {
   return (
     <>
       <TouchableOpacity onPress={props.func}>
-        <MaterialIcons name="arrow-back-ios" color="#000" size={30} />
+        <MaterialIcons
+          name="arrow-back-ios"
+          color={`${props.color}`}
+          size={30}
+        />
       </TouchableOpacity>
     </>
   );
