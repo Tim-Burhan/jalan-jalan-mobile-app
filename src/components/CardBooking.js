@@ -36,11 +36,20 @@ const CardBooking = props => {
           <Text style={[styles.fontSemiBold, styles.grey, styles.status]}>
             Status
           </Text>
-          <TouchableOpacity onPress={props.func} style={styles.label}>
-            <Text style={[styles.fontSemiBold, styles.white]}>
-              {props.data.status}
-            </Text>
-          </TouchableOpacity>
+
+          {props.data.status === 'Waiting for payment' ? (
+            <TouchableOpacity onPress={props.func} style={styles.labelOrange}>
+              <Text style={[styles.fontSemiBold, styles.white]}>
+                {props.data.status}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.labelGreen}>
+              <Text style={[styles.fontSemiBold, styles.white]}>
+                {props.data.status}
+              </Text>
+            </View>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -95,8 +104,17 @@ const styles = StyleSheet.create({
   status: {
     width: '40%',
   },
-  label: {
+  labelOrange: {
     backgroundColor: '#FF7F23',
+    height: 40,
+    width: '60%',
+    paddingHorizontal: '3%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  labelGreen: {
+    backgroundColor: '#4FCF4D',
     height: 40,
     width: '60%',
     paddingHorizontal: '3%',
