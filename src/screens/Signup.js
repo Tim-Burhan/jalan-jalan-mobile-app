@@ -128,7 +128,9 @@ class Signup extends Component {
                   style={[styles.fontRegular, styles.grey, styles.textDetail]}>
                   Already have an account?
                 </Text>
-                <TouchableOpacity style={[styles.border, styles.button]}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Login')}
+                  style={[styles.border, styles.button]}>
                   <Text
                     style={[styles.fontBold, styles.green, styles.textButton]}>
                     Sign In
