@@ -9,6 +9,7 @@ const destination = (state = initialState, action) => {
       return {
         ...state,
         data: action.payload,
+        errMsg: '',
       };
     }
     case 'GET_DESTINATION_FAILED': {
