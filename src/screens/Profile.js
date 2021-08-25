@@ -6,11 +6,15 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export default class Profile extends Component {
+import {connect} from 'react-redux';
+import {authLogout} from '../redux/actions/auth';
+
+class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,6 +45,16 @@ export default class Profile extends Component {
       ],
     };
   }
+
+  logout = () => {
+    Alert.alert('Logout', 'Do you want to logout?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: () => this.props.authLogout()},
+    ]);
+  };
 
   render() {
     return (
@@ -139,7 +153,7 @@ export default class Profile extends Component {
               <MaterialIcons color={'#979797'} name="settings" size={36} />
               <Text style={[styles.fontSemiBold, styles.font18]}>Settings</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity onPress={this.logout} style={styles.button}>
               <MaterialCommunityIcons
                 color={'#F24545'}
                 name="logout"
@@ -155,6 +169,15 @@ export default class Profile extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  users: state.users,
+});
+
+const mapDispatchToProps = {authLogout};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const styles = StyleSheet.create({
   flex: {
