@@ -18,18 +18,25 @@ const CardBooking = props => {
         resizeMode="cover"
         source={background}>
         <View style={styles.cardTop}>
-          <Text style={styles.fontRegular}>{props.data.date}</Text>
+          {/* Tuesday, 21 July ‘20 - 12:33 */}
+          <Text style={styles.fontRegular}>
+            {props.data.product.day}, {props.data.product.date}{' '}
+            {props.data.product.month} {props.data.product.year} -{' '}
+            {props.data.product.time_leave}
+          </Text>
           <View style={styles.wrapperDes}>
             <Text style={[styles.fontSemiBold, styles.font20]}>
-              {props.data.from}
+              {props.data.product.destination.base_country_code}
+              {/* FRM */}
             </Text>
             <Image style={styles.logoGrey} source={logoGrey} />
             <Text style={[styles.fontSemiBold, styles.font20]}>
-              {props.data.destination}
+              {props.data.product.destination.destination_country_code}
+              {/* TO */}
             </Text>
           </View>
           <Text style={[styles.fontRegular, styles.grey]}>
-            {props.data.airlines}, {props.data.code}
+            {props.data.product.airline.name}, {props.data.product.code}
           </Text>
         </View>
         <View style={styles.cardBottom}>
@@ -37,16 +44,16 @@ const CardBooking = props => {
             Status
           </Text>
 
-          {props.data.status === 'Waiting for payment' ? (
+          {props.data.status === 0 ? (
             <TouchableOpacity onPress={props.func} style={styles.labelOrange}>
               <Text style={[styles.fontSemiBold, styles.white]}>
-                {props.data.status}
+                Waiting for payment
               </Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.labelGreen}>
               <Text style={[styles.fontSemiBold, styles.white]}>
-                {props.data.status}
+                Payment Successfully
               </Text>
             </View>
           )}
