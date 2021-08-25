@@ -6,6 +6,7 @@ import auth from './auth';
 import user from './user';
 import destination from './destination';
 import search from './search';
+import transaction from './transaction';
 
 const persistAuth = {
   key: 'auth',
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   user,
   destination,
   search,
+  transaction,
 });
 
 // export default rootReducer;
