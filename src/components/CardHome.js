@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {REACT_APP_BASE_URL} from '@env';
 
 const CardHome = props => {
   return (
     <View style={styles.containerCard}>
       <ImageBackground
         source={{
-          uri: `${props.data.image}`,
+          uri: `${REACT_APP_BASE_URL}${props.data.picture}`,
         }}
         resizeMode="cover"
         borderRadius={30}
@@ -21,20 +22,18 @@ const CardHome = props => {
         <View style={styles.background}>
           <View style={styles.flex1}>
             <View style={styles.count}>
-              <Text style={[styles.fontBold, styles.white]}>
-                {props.data.count} airlines
-              </Text>
+              <Text style={[styles.fontBold, styles.white]}>15 airlines</Text>
             </View>
           </View>
           <View style={styles.wrapperCity}>
             <View style={styles.containerCity}>
               <Text
                 style={[styles.fontSemiBold, styles.white, styles.fontCity]}>
-                {props.data.city},
+                {props.data.destination_city},
               </Text>
               <Text
                 style={[styles.fontSemiBold, styles.white, styles.fontCountry]}>
-                {props.data.country}
+                {props.data.destination_country}
               </Text>
             </View>
             <View style={styles.wrapperButton}>
