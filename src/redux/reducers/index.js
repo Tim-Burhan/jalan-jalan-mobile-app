@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from './auth';
 import user from './user';
 import destination from './destination';
+import search from './search';
 
 const persistAuth = {
   key: 'auth',
@@ -15,6 +16,16 @@ const rootReducer = combineReducers({
   auth: persistReducer(persistAuth, auth),
   user,
   destination,
+  search,
 });
+
+// export default rootReducer;
+// import search from './search';
+
+// const reducer = combineReducers({
+//   search,
+// });
+
+// export default reducer;
 
 export default rootReducer;

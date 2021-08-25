@@ -22,4 +22,14 @@ const Main = () => {
   );
 };
 
+// import store from './src/redux/store';
+
+// const Main = () => {
+//   return (
+//     <Provider store={store}>
+//       <App />
+//       </Provider>
+//   );
+// };
+
 AppRegistry.registerComponent(appName, () => Main);

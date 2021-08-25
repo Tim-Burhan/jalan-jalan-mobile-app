@@ -13,3 +13,6 @@ export default () => {
   const persistor = persistStore(store);
   return {store, persistor};
 };
+// const store = createStore(rootReducer, applyMiddleware(thunk, logger));
+
+// export default store;
