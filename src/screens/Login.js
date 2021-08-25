@@ -9,21 +9,49 @@ import {
 } from 'react-native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import Toast from 'react-native-toast-message';
 
 import Google from '../../assets/google.png';
 import Facebook from '../../assets/facebook.png';
 import Fingerprint from '../../assets/fingerprint.png';
 import BackButton from '../components/BackButton';
 
+import {connect} from 'react-redux';
+import {authLogin} from '../redux/actions/auth';
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid Email!!').required(''),
   password: Yup.string().min(8, 'Minimum 8 Characters!').required(''),
 });
 
-export default class Login extends Component {
+class Login extends Component {
   login = values => {
     console.log(values);
-    this.props.navigation.navigate('Dashboard');
+    this.props.authLogin(values.email, values.password).then(() => {
+      if (this.props.auth.msg === 'login success!') {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: 'Login success',
+          visibilityTime: 800,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: `${this.props.auth.msg}`,
+          visibilityTime: 1000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      }
+    });
   };
 
   render() {
@@ -117,6 +145,14 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = {authLogin};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const styles = StyleSheet.create({
   wrapper: {
