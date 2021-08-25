@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {REACT_APP_BASE_URL} from '@env';
 
 import {connect} from 'react-redux';
 import {authLogout} from '../redux/actions/auth';
@@ -57,6 +58,7 @@ class Profile extends Component {
   };
 
   render() {
+    console.log(this.props.user.data);
     return (
       <View style={styles.wrapper}>
         <View style={styles.wrapperHeader}>
@@ -76,14 +78,23 @@ class Profile extends Component {
             <View style={styles.containerImage}>
               <Image
                 style={styles.image}
-                source={{uri: `${this.state.user[0].image}`}}
+                // source={{uri: `${this.state.user[0].image}`}}
+                source={
+                  this.props.user.data.picture === null
+                    ? {
+                        uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                      }
+                    : {
+                        uri: `${REACT_APP_BASE_URL}${this.props.user.data.picture}`,
+                      }
+                }
               />
             </View>
             <Text style={[styles.fontSemiBold, styles.name]}>
-              {this.state.user[0].fullName}
+              {this.props.user.data.name}
             </Text>
             <Text style={[styles.fontRegular, styles.grey, styles.city]}>
-              {this.state.user[0].city}, Indonesia
+              {this.props.user.data.address}
             </Text>
           </View>
           <View style={styles.wrapperCard}>
@@ -172,7 +183,7 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  users: state.users,
+  user: state.user,
 });
 
 const mapDispatchToProps = {authLogout};
