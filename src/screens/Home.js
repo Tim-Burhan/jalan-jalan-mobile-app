@@ -45,7 +45,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.props.destination.data);
     return (
       <>
         {this.state.isLoading === false ? (
