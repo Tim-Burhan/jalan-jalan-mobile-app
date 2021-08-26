@@ -24,6 +24,7 @@ class Home extends Component {
     super(props);
     this.state = {
       isLoading: true,
+      search: '',
     };
   }
 
@@ -36,6 +37,12 @@ class Home extends Component {
     this.props.getDestination();
     await this.setState({
       isLoading: false,
+    });
+  };
+
+  handleChange = val => {
+    this.setState({
+      search: val,
     });
   };
 
@@ -73,6 +80,12 @@ class Home extends Component {
                       styles.widthTextInput,
                     ]}
                     placeholder="Where you want to go?"
+                    onChangeText={this.handleChange}
+                    onSubmitEditing={() =>
+                      this.props.navigation.navigate('searchResults', {
+                        search: this.state.search,
+                      })
+                    }
                   />
                 </View>
               </View>
