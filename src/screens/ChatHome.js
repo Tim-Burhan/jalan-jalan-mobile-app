@@ -5,9 +5,7 @@ import {
   StyleSheet,
   TextInput,
   Image,
-  // Dimensions,
   TouchableOpacity,
-  // ActivityIndicator,
   FlatList,
 } from 'react-native';
 
@@ -138,31 +136,15 @@ export default class ChatHome extends Component {
             />
           </View>
           <View style={styles.wrapperChat}>
-            {/* <TouchableOpacity style={styles.containerChat}>
-              <View style={styles.wrapperImageChat}>
-                <Image
-                  style={styles.imageChat}
-                  source={{
-                    uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-                  }}
-                />
-              </View>
-              <View style={styles.wrapperContentChat}>
-                <Text style={styles.fontSemiBold}>Muhammad Rizky Ramadhan</Text>
-                <Text style={[styles.fontRegular, styles.grey]}>
-                  Hello, How are you?
-                </Text>
-              </View>
-              <View style={styles.wrapperStatusChat}>
-                <Text style={[styles.fontRegular, styles.grey]}>09:30</Text>
-              </View>
-            </TouchableOpacity> */}
             <FlatList
               style={styles.flatList}
               data={this.state.chatHome}
               showsVerticalScrollIndicator={false}
               renderItem={({item}) => (
-                <TouchableOpacity key={item.id} style={styles.containerChat}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('ChatRoom')}
+                  key={item.id}
+                  style={styles.containerChat}>
                   <View style={styles.wrapperImageChat}>
                     <Image
                       style={styles.imageChat}
@@ -191,8 +173,6 @@ export default class ChatHome extends Component {
     );
   }
 }
-
-// const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   widthTextInput: {

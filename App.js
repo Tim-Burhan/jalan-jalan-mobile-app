@@ -23,6 +23,7 @@ import BookingDetail from './src/screens/BookingDetail';
 import Search from './src/screens/Search';
 import SearchResult from './src/screens/SearchResults';
 import FlightDetail from './src/screens/FlightDetail';
+import ChatRoom from './src/screens/ChatRoom';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -156,6 +157,11 @@ const App = props => {
               <Stack.Screen
                 name="BookingDetail"
                 component={BookingDetail}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ChatRoom"
+                component={ChatRoom}
                 options={{headerShown: false}}
               />
             </React.Fragment>
