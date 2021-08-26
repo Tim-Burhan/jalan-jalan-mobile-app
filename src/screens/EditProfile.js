@@ -4,9 +4,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  // TextInput,
   Image,
-  ToastAndroid,
   Alert,
   TextInput,
   ScrollView,
@@ -14,39 +12,38 @@ import {
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import Toast from 'react-native-toast-message';
+import {REACT_APP_BASE_URL} from '@env';
 
 import BackButton from '../components/BackButton';
 
-export default class EditProfile extends Component {
+import {connect} from 'react-redux';
+import {getUserById, changeUser} from '../redux/actions/user';
+
+class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showPicture: '',
       picture: null,
+      isUpdate: false,
     };
   }
 
   selectPicture = e => {
     if (!e.didCancel) {
       const maxSize = 1024 * 1024 * 2;
-      console.log(e.assets[0].fileSize);
-      console.log(maxSize);
       if (e.assets[0].fileSize > maxSize) {
-        ToastAndroid.showWithGravity(
-          'File to large!',
-          ToastAndroid.LONG,
-          ToastAndroid.TOP,
-        );
-        // Toast.show({
-        //   type: 'error',
-        //   position: 'top',
-        //   text1: 'Error',
-        //   text2: 'File to large!',
-        //   visibilityTime: 1000,
-        //   autoHide: true,
-        //   topOffset: 30,
-        //   bottomOffset: 40,
-        // });
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'File to large!',
+          visibilityTime: 1000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
         this.setState({
           picture: null,
           showPicture: '',
@@ -68,13 +65,94 @@ export default class EditProfile extends Component {
       },
       {
         text: 'Gallery',
-        onPress: () => launchImageLibrary({quality: 1}, this.selectPicture),
+        onPress: () => launchImageLibrary({quality: 0.5}, this.selectPicture),
       },
       {
         text: 'Camera',
-        onPress: () => launchCamera({quality: 1}, this.selectPicture),
+        onPress: () => launchCamera({quality: 0.5}, this.selectPicture),
       },
     ]);
+  };
+
+  changeUser = values => {
+    const {token, id} = this.props.auth;
+    const {picture, isUpdate} = this.state;
+    if (picture === null || picture === undefined || picture === '') {
+      const data = {
+        address: values.address,
+        city: values.city,
+        email: values.email,
+        username: values.userName,
+        name: values.fullName,
+        postCode: values.postCode,
+      };
+      this.props.changeUser(token, data, id).then(() => {
+        this.setState({
+          isUpdate: !isUpdate,
+        });
+        if (this.props.user.msg === 'upload successfully!') {
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Success',
+            text2: 'Upload successfully',
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        } else {
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Error',
+            text2: `${this.props.user.msg}`,
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        }
+      });
+    } else {
+      const data = {
+        address: values.address,
+        city: values.city,
+        email: values.email,
+        username: values.userName,
+        name: values.fullName,
+        postCode: values.postCode,
+        picture: picture,
+      };
+      this.props.changeUser(token, data, id).then(() => {
+        this.setState({
+          isUpdate: !isUpdate,
+        });
+        if (this.props.user.msg === 'upload successfully!') {
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Success',
+            text2: 'Upload successfully',
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        } else {
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Error',
+            text2: `${this.props.user.msg}`,
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        }
+      });
+    }
   };
 
   saveEdit = values => {
@@ -85,10 +163,17 @@ export default class EditProfile extends Component {
       },
       {
         text: 'Yes',
-        onPress: () => console.log(values),
+        onPress: () => this.changeUser(values),
       },
     ]);
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    const {token, id} = this.props.auth;
+    if (prevState.isUpdate !== this.state.isUpdate) {
+      this.props.getUserById(token, id);
+    }
+  }
 
   render() {
     const validationSchema = Yup.object().shape({
@@ -124,29 +209,44 @@ export default class EditProfile extends Component {
           <TouchableOpacity
             onPress={this.setPicture}
             style={styles.containerImage}>
-            <Image
-              style={styles.image}
-              source={
-                this.state.showPicture === ''
-                  ? {
-                      uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-                    }
-                  : {
-                      uri: this.state.showPicture,
-                    }
-              }
-            />
+            {this.props.user.data.picture === null ? (
+              <Image
+                style={styles.image}
+                source={
+                  this.state.showPicture === ''
+                    ? {
+                        uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                      }
+                    : {
+                        uri: this.state.showPicture,
+                      }
+                }
+              />
+            ) : (
+              <Image
+                style={styles.image}
+                source={
+                  this.state.showPicture === ''
+                    ? {
+                        uri: `${REACT_APP_BASE_URL}${this.props.user.data.picture}`,
+                      }
+                    : {
+                        uri: this.state.showPicture,
+                      }
+                }
+              />
+            )}
           </TouchableOpacity>
 
           <Formik
             validationSchema={validationSchema}
             initialValues={{
-              email: '',
-              userName: '',
-              fullName: '',
-              city: '',
-              address: '',
-              postCode: '',
+              email: `${this.props.user.data.email}`,
+              userName: `${this.props.user.data.username}`,
+              fullName: `${this.props.user.data.name}`,
+              city: `${this.props.user.data.city}`,
+              address: `${this.props.user.data.address}`,
+              postCode: `${this.props.user.data.post_code}`,
             }}
             onSubmit={values => this.saveEdit(values)}>
             {({handleChange, handleBlur, handleSubmit, errors, values}) => (
@@ -190,7 +290,7 @@ export default class EditProfile extends Component {
                     placeholder="Fullname"
                     onChangeText={handleChange('fullName')}
                     onBlur={handleBlur('fullName')}
-                    value={values.FullName}
+                    value={values.fullName}
                   />
                   {errors.fullName ? (
                     <Text style={[styles.textError, styles.fontRegular]}>
@@ -251,6 +351,16 @@ export default class EditProfile extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  user: state.user,
+  destination: state.destination,
+});
+
+const mapDispatchToProps = {getUserById, changeUser};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);
 
 const styles = StyleSheet.create({
   font16: {
