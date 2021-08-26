@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   city: {
-    width: '50%',
+    width: 300,
     fontSize: 16,
     textAlign: 'center',
   },
