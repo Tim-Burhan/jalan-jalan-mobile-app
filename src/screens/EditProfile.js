@@ -95,9 +95,6 @@ export default class EditProfile extends Component {
       email: Yup.string()
         .email('Invalid Email!!')
         .required('Must fill in the form'),
-      phoneNumber: Yup.string()
-        .min(11, 'Minimum 11 Digits!')
-        .required('Must fill in the form'),
       userName: Yup.string()
         .min(8, 'Minimum 8 Characters!')
         .required('Must fill in the form'),
@@ -145,7 +142,6 @@ export default class EditProfile extends Component {
             validationSchema={validationSchema}
             initialValues={{
               email: '',
-              phoneNumber: '',
               userName: '',
               fullName: '',
               city: '',
@@ -172,19 +168,6 @@ export default class EditProfile extends Component {
                   {errors.email ? (
                     <Text style={[styles.textError, styles.fontRegular]}>
                       {errors.email}
-                    </Text>
-                  ) : null}
-                  <TextInput
-                    style={[styles.textInput, styles.fontSemiBold]}
-                    keyboardType="number-pad"
-                    placeholder="Phone Number"
-                    onChangeText={handleChange('phoneNumber')}
-                    onBlur={handleBlur('phoneNumber')}
-                    value={values.phoneNumber}
-                  />
-                  {errors.phoneNumber ? (
-                    <Text style={[styles.textError, styles.fontRegular]}>
-                      {errors.phoneNumber}
                     </Text>
                   ) : null}
                   <Text style={[styles.fontSemiBold, styles.font16]}>
