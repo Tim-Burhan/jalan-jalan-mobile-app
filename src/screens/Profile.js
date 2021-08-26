@@ -58,7 +58,6 @@ class Profile extends Component {
   };
 
   render() {
-    console.log(this.props.user.data);
     return (
       <View style={styles.wrapper}>
         <View style={styles.wrapperHeader}>
