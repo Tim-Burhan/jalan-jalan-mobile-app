@@ -176,7 +176,7 @@ class BookingDetail extends Component {
           </View>
         ) : (
           <View style={styles.wrapperLoading}>
-            <ActivityIndicator size="large" color="#000" />
+            <ActivityIndicator size="large" color="#fff" />
           </View>
         )}
       </>
