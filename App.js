@@ -3,10 +3,11 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {NativeBaseProvider} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Toast from 'react-native-toast-message';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {connect} from 'react-redux';
 
 import Welcome from './src/screens/Welcome';
 import Signup from './src/screens/Signup';
@@ -92,70 +93,82 @@ const App = props => {
     <NativeBaseProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen
-            name="Welcome"
-            component={Welcome}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Signup"
-            component={Signup}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPassword}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Dashboard"
-            component={BottomTab}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="ChatHome"
-            component={ChatHome}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            component={Search}
-            name="search"
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            component={SearchResult}
-            name="searchResults"
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            component={FlightDetail}
-            name="detail"
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="History"
-            component={History}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="BookingDetail"
-            component={BookingDetail}
-            options={{headerShown: false}}
-          />
+          {props.auth.token === null ? (
+            <React.Fragment>
+              <Stack.Screen
+                name="Welcome"
+                component={Welcome}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Signup"
+                component={Signup}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ForgotPassword"
+                component={ForgotPassword}
+                options={{headerShown: false}}
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Stack.Screen
+                name="Dashboard"
+                component={BottomTab}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                component={Search}
+                name="search"
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                component={SearchResult}
+                name="searchResults"
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                component={FlightDetail}
+                name="detail"
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ChatHome"
+                component={ChatHome}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="EditProfile"
+                component={EditProfile}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="History"
+                component={History}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="BookingDetail"
+                component={BookingDetail}
+                options={{headerShown: false}}
+              />
+            </React.Fragment>
+          )}
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast ref={ref => Toast.setRef(ref)} />
     </NativeBaseProvider>
   );
 };
 
-export default App;
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, null)(App);

@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -14,159 +15,174 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CardHome from '../components/CardHome';
 import ChatButton from '../components/ChatButton';
 
-export default class Home extends Component {
+import {connect} from 'react-redux';
+import {getUserById} from '../redux/actions/user';
+import {getDestination} from '../redux/actions/destination';
+
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      destinations: [
-        {
-          id: 1,
-          city: 'Tokyo',
-          country: 'Japan',
-          image:
-            'https://digital.ihg.com/is/image/ihg/intercontinental---ana-tokyo-4086842933-2x1?fit=fit,1&wid=2400&hei=1200&qlt=85,0&resMode=sharp2&op_usm=1.75,0.9,2,0',
-          count: 15,
-        },
-        {
-          id: 2,
-          city: 'Barcelona',
-          country: 'Spain',
-          image:
-            'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
-          count: 15,
-        },
-        {
-          id: 3,
-          city: 'Manchester',
-          country: 'England',
-          image:
-            'https://eu-assets.simpleview-europe.com/manchester2016/imageresizer/?image=%2Fdbimgs%2Folympic-parade%20%281%29-min.jpg&action=BlogDetailContent',
-          count: 15,
-        },
-      ],
+      isLoading: true,
     };
+  }
+
+  getDataUser = () => {
+    const {token, id} = this.props.auth;
+    this.props.getUserById(token, id);
+  };
+
+  getDestination = async () => {
+    this.props.getDestination();
+    await this.setState({
+      isLoading: false,
+    });
+  };
+
+  componentDidMount() {
+    this.getDataUser();
+    this.getDestination();
   }
 
   render() {
     return (
-      <View style={styles.wrapper}>
-        <View style={styles.wrapperHeader}>
-          <View style={styles.wrapperNav}>
-            <Text style={[styles.fontBold, styles.title]}>Explore</Text>
-            <ChatButton
-              func={() => this.props.navigation.navigate('ChatHome')}
-            />
-            <TouchableOpacity style={styles.icon}>
-              <MaterialCommunityIcons
-                color={'#595959'}
-                name="bell-outline"
-                size={32}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.wrapperNav}>
-            <View style={styles.textInput}>
-              <MaterialIcons color={'#A3A3A3'} name="search" size={32} />
-              <TextInput
-                style={[
-                  styles.grey,
-                  styles.fontSemiBold,
-                  styles.widthTextInput,
-                ]}
-                placeholder="Where you want to go?"
-              />
+      <>
+        {this.state.isLoading === false ? (
+          <View style={styles.wrapper}>
+            <View style={styles.wrapperHeader}>
+              <View style={styles.wrapperNav}>
+                <Text style={[styles.fontBold, styles.title]}>Explore</Text>
+                <ChatButton
+                  func={() => this.props.navigation.navigate('ChatHome')}
+                />
+                <TouchableOpacity style={styles.icon}>
+                  <MaterialCommunityIcons
+                    color={'#595959'}
+                    name="bell-outline"
+                    size={32}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.wrapperNav}>
+                <View style={styles.textInput}>
+                  <MaterialIcons color={'#A3A3A3'} name="search" size={32} />
+                  <TextInput
+                    style={[
+                      styles.grey,
+                      styles.fontSemiBold,
+                      styles.widthTextInput,
+                    ]}
+                    placeholder="Where you want to go?"
+                  />
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-        <View style={styles.wrapperContent}>
-          <View style={styles.wrapperSubtitle}>
-            <Text style={[styles.fontSemiBold, styles.subtitle]}>
-              Trending destinations
-            </Text>
-            <TouchableOpacity>
-              <Text style={[styles.fontSemiBold, styles.viewAll, styles.green]}>
-                View all
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.wrapperCard}>
-            <FlatList
-              style={styles.flatListCard}
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              data={this.state.destinations}
-              renderItem={({item}) => <CardHome data={item} />}
-            />
-          </View>
-        </View>
-        <View style={styles.wrapperTopDes}>
-          <View style={styles.wrapperSubtitle}>
-            <Text style={[styles.fontSemiBold, styles.subtitle2]}>
-              Top 10 destinations
-            </Text>
-          </View>
-          <View style={styles.wrapperDes}>
-            <View style={styles.containerDes}>
-              <View style={styles.des}>
-                <Image
-                  style={styles.desImage}
-                  source={{
-                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
-                  }}
+            <View style={styles.wrapperContent}>
+              <View style={styles.wrapperSubtitle}>
+                <Text style={[styles.fontSemiBold, styles.subtitle]}>
+                  Trending destinations
+                </Text>
+                <TouchableOpacity>
+                  <Text
+                    style={[styles.fontSemiBold, styles.viewAll, styles.green]}>
+                    View all
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.wrapperCard}>
+                <FlatList
+                  style={styles.flatListCard}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}
+                  data={this.props.destination.data}
+                  renderItem={({item}) => <CardHome data={item} />}
                 />
               </View>
-              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
             </View>
-            <View style={styles.containerDes}>
-              <View style={styles.des}>
-                <Image
-                  style={styles.desImage}
-                  source={{
-                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
-                  }}
-                />
+            <View style={styles.wrapperTopDes}>
+              <View style={styles.wrapperSubtitle}>
+                <Text style={[styles.fontSemiBold, styles.subtitle2]}>
+                  Top 10 destinations
+                </Text>
               </View>
-              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
-            </View>
-            <View style={styles.containerDes}>
-              <View style={styles.des}>
-                <Image
-                  style={styles.desImage}
-                  source={{
-                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
-                  }}
-                />
+              <View style={styles.wrapperDes}>
+                <View style={styles.containerDes}>
+                  <View style={styles.des}>
+                    <Image
+                      style={styles.desImage}
+                      source={{
+                        uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+                </View>
+                <View style={styles.containerDes}>
+                  <View style={styles.des}>
+                    <Image
+                      style={styles.desImage}
+                      source={{
+                        uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+                </View>
+                <View style={styles.containerDes}>
+                  <View style={styles.des}>
+                    <Image
+                      style={styles.desImage}
+                      source={{
+                        uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+                </View>
+                <View style={styles.containerDes}>
+                  <View style={styles.des}>
+                    <Image
+                      style={styles.desImage}
+                      source={{
+                        uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+                </View>
+                <View style={styles.containerDes}>
+                  <View style={styles.des}>
+                    <Image
+                      style={styles.desImage}
+                      source={{
+                        uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.fontSemiBold]}>TOKYO</Text>
+                </View>
               </View>
-              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
-            </View>
-            <View style={styles.containerDes}>
-              <View style={styles.des}>
-                <Image
-                  style={styles.desImage}
-                  source={{
-                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
-                  }}
-                />
-              </View>
-              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
-            </View>
-            <View style={styles.containerDes}>
-              <View style={styles.des}>
-                <Image
-                  style={styles.desImage}
-                  source={{
-                    uri: 'https://lp-cms-production.imgix.net/2021-02/shutterstockRF_1347219839.jpg?auto=format&fit=crop&sharp=10&vib=20&ixlib=react-8.6.4&w=850',
-                  }}
-                />
-              </View>
-              <Text style={[styles.fontSemiBold]}>TOKYO</Text>
             </View>
           </View>
-        </View>
-      </View>
+        ) : (
+          <View style={styles.wrapperLoading}>
+            <ActivityIndicator size="large" color="#0ac77b" />
+          </View>
+        )}
+      </>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  user: state.user,
+  destination: state.destination,
+});
+
+const mapDispatchToProps = {getUserById, getDestination};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 const styles = StyleSheet.create({
   widthTextInput: {
@@ -196,6 +212,11 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
+  },
+  wrapperLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   wrapperHeader: {
     flex: 4,

@@ -6,11 +6,16 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {REACT_APP_BASE_URL} from '@env';
 
-export default class Profile extends Component {
+import {connect} from 'react-redux';
+import {authLogout} from '../redux/actions/auth';
+
+class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +47,18 @@ export default class Profile extends Component {
     };
   }
 
+  logout = () => {
+    Alert.alert('Logout', 'Do you want to logout?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: () => this.props.authLogout()},
+    ]);
+  };
+
   render() {
+    console.log(this.props.user.data);
     return (
       <View style={styles.wrapper}>
         <View style={styles.wrapperHeader}>
@@ -62,14 +78,23 @@ export default class Profile extends Component {
             <View style={styles.containerImage}>
               <Image
                 style={styles.image}
-                source={{uri: `${this.state.user[0].image}`}}
+                // source={{uri: `${this.state.user[0].image}`}}
+                source={
+                  this.props.user.data.picture === null
+                    ? {
+                        uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                      }
+                    : {
+                        uri: `${REACT_APP_BASE_URL}${this.props.user.data.picture}`,
+                      }
+                }
               />
             </View>
             <Text style={[styles.fontSemiBold, styles.name]}>
-              {this.state.user[0].fullName}
+              {this.props.user.data.name}
             </Text>
             <Text style={[styles.fontRegular, styles.grey, styles.city]}>
-              {this.state.user[0].city}, Indonesia
+              {this.props.user.data.address}
             </Text>
           </View>
           <View style={styles.wrapperCard}>
@@ -139,7 +164,7 @@ export default class Profile extends Component {
               <MaterialIcons color={'#979797'} name="settings" size={36} />
               <Text style={[styles.fontSemiBold, styles.font18]}>Settings</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity onPress={this.logout} style={styles.button}>
               <MaterialCommunityIcons
                 color={'#F24545'}
                 name="logout"
@@ -155,6 +180,15 @@ export default class Profile extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  user: state.user,
+});
+
+const mapDispatchToProps = {authLogout};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const styles = StyleSheet.create({
   flex: {

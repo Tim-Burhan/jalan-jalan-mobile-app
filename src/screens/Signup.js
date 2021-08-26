@@ -8,8 +8,12 @@ import {
 } from 'react-native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import Toast from 'react-native-toast-message';
 
 import BackButton from '../components/BackButton';
+
+import {connect} from 'react-redux';
+import {authRegister} from '../redux/actions/auth';
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().min(8, 'Minimum 10 Characters!').required(''),
@@ -17,7 +21,39 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().min(8, 'Minimum 8 Characters!').required(''),
 });
 
-export default class Signup extends Component {
+class Signup extends Component {
+  signup = values => {
+    console.log(values);
+    this.props
+      .authRegister(values.fullName, values.email, values.password)
+      .then(() => {
+        if (this.props.auth.msg === 'register success!') {
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Success',
+            text2: 'Register success',
+            visibilityTime: 800,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+          this.props.navigation.navigate('Login');
+        } else {
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Error',
+            text2: `${this.props.auth.msg}`,
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        }
+      });
+  };
+
   render() {
     return (
       <View style={styles.wrapper}>
@@ -38,7 +74,7 @@ export default class Signup extends Component {
           <Formik
             validationSchema={validationSchema}
             initialValues={{fullName: '', email: '', password: ''}}
-            onSubmit={values => console.log(values)}>
+            onSubmit={values => this.signup(values)}>
             {({handleChange, handleBlur, handleSubmit, errors, values}) => (
               <View style={styles.wrapperInput}>
                 <TextInput
@@ -92,7 +128,9 @@ export default class Signup extends Component {
                   style={[styles.fontRegular, styles.grey, styles.textDetail]}>
                   Already have an account?
                 </Text>
-                <TouchableOpacity style={[styles.border, styles.button]}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Login')}
+                  style={[styles.border, styles.button]}>
                   <Text
                     style={[styles.fontBold, styles.green, styles.textButton]}>
                     Sign In
@@ -106,6 +144,13 @@ export default class Signup extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = {authRegister};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
 
 const styles = StyleSheet.create({
   wrapper: {
