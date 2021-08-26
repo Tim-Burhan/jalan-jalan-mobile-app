@@ -1,6 +1,6 @@
 const initialState = {
   data: [],
-  errMsg: '',
+  msg: '',
 };
 
 const user = (state = initialState, action) => {
@@ -14,7 +14,19 @@ const user = (state = initialState, action) => {
     case 'GET_USER_BY_ID_FAILED': {
       return {
         ...state,
-        errMsg: action.payload,
+        msg: action.payload,
+      };
+    }
+    case 'CHANGE_USER': {
+      return {
+        ...state,
+        msg: action.payload,
+      };
+    }
+    case 'CHANGE_USER_FAILED': {
+      return {
+        ...state,
+        msg: action.payload,
       };
     }
     default: {
