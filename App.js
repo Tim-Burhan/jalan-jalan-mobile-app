@@ -19,6 +19,9 @@ import ChatHome from './src/screens/ChatHome';
 import EditProfile from './src/screens/EditProfile';
 import History from './src/screens/History';
 import BookingDetail from './src/screens/BookingDetail';
+import Search from './src/screens/Search';
+import SearchResult from './src/screens/SearchResults';
+import FlightDetail from './src/screens/FlightDetail';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -122,6 +125,21 @@ const App = props => {
           <Stack.Screen
             name="EditProfile"
             component={EditProfile}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            component={Search}
+            name="search"
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            component={SearchResult}
+            name="searchResults"
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            component={FlightDetail}
+            name="detail"
             options={{headerShown: false}}
           />
           <Stack.Screen
