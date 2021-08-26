@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   nav: {
-    backgroundColor: '#7ECFC0',
+    backgroundColor: '#0ac77b',
     height: 200,
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
@@ -147,8 +147,7 @@ const styles = StyleSheet.create({
   wrap1: {
     marginLeft: 190,
     marginTop: 40,
-    backgroundColor: 'white',
-    opacity: 0.3,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     width: 150,
     borderRadius: 6,
   },
