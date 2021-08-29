@@ -19,15 +19,6 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: [
-        {
-          id: 1,
-          fullName: 'Muhammad Rizky Ramadhan',
-          image:
-            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-          city: 'Purwokerto',
-        },
-      ],
       card: [
         {
           id: 1,
@@ -150,14 +141,12 @@ class Profile extends Component {
           </View>
           <View style={styles.wrapperButton}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('History')}
+              // onPress={() => this.props.navigation.navigate('History')}
               style={styles.button}>
-              <MaterialCommunityIcons
-                color={'#979797'}
-                name="lock-clock"
-                size={36}
-              />
-              <Text style={[styles.fontSemiBold, styles.font18]}>History</Text>
+              <MaterialCommunityIcons color={'#979797'} name="star" size={36} />
+              <Text style={[styles.fontSemiBold, styles.font18]}>
+                My Review
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
               <MaterialIcons color={'#979797'} name="settings" size={36} />
