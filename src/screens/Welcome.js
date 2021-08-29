@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-
+import RNBootSplash from 'react-native-bootsplash';
 import Logo from '../../assets/logoWelcome.png';
 
 export default class Welcome extends Component {
+  componentDidMount() {
+    RNBootSplash.hide({fade: true});
+  }
   render() {
     return (
       <View style={styles.wrapper}>
