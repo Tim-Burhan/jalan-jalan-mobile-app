@@ -40,7 +40,7 @@ export default class Search extends Component {
               <Text style={styles.h1}>Indonesia</Text>
             </View>
             <View style={styles.box1}>
-              <Icon name="arrow-swap" color="#7ECFC0" size={22} />
+              <Icon name="arrow-swap" color="#0ac77b" size={22} />
             </View>
             <View>
               <Text style={styles.h2}>To</Text>
@@ -100,21 +100,21 @@ export default class Search extends Component {
               containerStyle={styles.cekbox1}
               containerWrap={styles.cekbox2}
               checked={this.state.checked}
-              checkedColor="#7ECFC0"
+              checkedColor="#0ac77b"
               onPress={() => this.setState({checked: !this.state.checked})}
             />
             <CheckBox
               containerStyle={styles.cekbox1}
               containerWrap={styles.cekbox2}
               checked={this.state.checked}
-              checkedColor="#7ECFC0"
+              checkedColor="#0ac77b"
               onPress={() => this.setState({checked: !this.state.checked})}
             />
             <CheckBox
               containerStyle={styles.cekbox1}
               containerWrap={styles.cekbox2}
               checked={this.state.checked}
-              checkedColor="#7ECFC0"
+              checkedColor="#0ac77b"
               onPress={() => this.setState({checked: !this.state.checked})}
             />
           </View>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     color: '#979797',
   },
   btn: {
-    backgroundColor: '#7ECFC0',
+    backgroundColor: '#0ac77b',
     flex: 1,
     marginRight: 7,
     height: 40,
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   btn5: {
-    backgroundColor: '#7ECFC0',
+    backgroundColor: '#0ac77b',
     marginHorizontal: 20,
     height: 50,
     justifyContent: 'center',
