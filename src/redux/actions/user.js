@@ -1,9 +1,11 @@
 import {http} from '../../helpers/http';
 import {REACT_APP_BASE_URL} from '@env';
 
-export const getUserById = (token, id) => async dispatch => {
+export const getUserById = token => async dispatch => {
   try {
-    const {data} = await http(token).get(`${REACT_APP_BASE_URL}/profile/${id}`);
+    const {data} = await http(token).get(
+      `${REACT_APP_BASE_URL}/profile/your-profile`,
+    );
     dispatch({
       type: 'GET_USER_BY_ID',
       payload: data.results,
@@ -16,8 +18,7 @@ export const getUserById = (token, id) => async dispatch => {
   }
 };
 
-export const changeUser = (token, Data, id) => async dispatch => {
-  console.log(Data);
+export const changeUser = (token, Data) => async dispatch => {
   const form = new FormData();
   if (Data.picture !== undefined) {
     form.append('picture', {
@@ -32,20 +33,27 @@ export const changeUser = (token, Data, id) => async dispatch => {
   form.append('city', Data.city);
   form.append('post_code', Data.postCode);
   form.append('address', Data.address);
-  console.log(form);
+  form.append('phoneNumber', Data.phoneNumber);
   try {
-    const {data} = await http(token).patch(
-      `${REACT_APP_BASE_URL}/profile/${id}`,
+    const {data} = await http(token).put(
+      `${REACT_APP_BASE_URL}/profile/editprofile`,
       form,
     );
-    dispatch({
-      type: 'CHANGE_USER',
-      payload: data.message,
-    });
+    if (Data.picture !== undefined) {
+      dispatch({
+        type: 'CHANGE_USER',
+        payload: data.message,
+      });
+    } else {
+      dispatch({
+        type: 'CHANGE_USER',
+        payload: data.Message,
+      });
+    }
   } catch (err) {
     dispatch({
       type: 'CHANGE_USER_FAILED',
-      payload: err.response.data.message,
+      payload: err.response.data.Message,
     });
   }
 };
