@@ -32,6 +32,18 @@ const transaction = (state = initialState, action) => {
         errMsg: action.payload,
       };
     }
+    case 'ADD_BOOKING': {
+      return {
+        ...state,
+        errMsg: '',
+      };
+    }
+    case 'ADD_BOOKING_FAILED': {
+      return {
+        ...state,
+        errMsg: action.payload,
+      };
+    }
     case 'CONFIRM_PAYMENT': {
       return {
         ...state,
@@ -39,6 +51,18 @@ const transaction = (state = initialState, action) => {
       };
     }
     case 'CONFIRM_PAYMENT_FAILED': {
+      return {
+        ...state,
+        errMsg: action.payload,
+      };
+    }
+    case 'CONFIRM_DELETE_PAYMENT': {
+      return {
+        ...state,
+        errMsg: '',
+      };
+    }
+    case 'CONFIRM_DELETE_PAYMENT_FAILED': {
       return {
         ...state,
         errMsg: action.payload,
