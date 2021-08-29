@@ -75,7 +75,7 @@ class EditProfile extends Component {
   };
 
   changeUser = values => {
-    const {token, id} = this.props.auth;
+    const {token} = this.props.auth;
     const {picture, isUpdate} = this.state;
     if (picture === null || picture === undefined || picture === '') {
       const data = {
@@ -85,17 +85,34 @@ class EditProfile extends Component {
         username: values.userName,
         name: values.fullName,
         postCode: values.postCode,
+        phoneNumber: values.phoneNumber,
       };
-      this.props.changeUser(token, data, id).then(() => {
+      this.props.changeUser(token, data).then(() => {
         this.setState({
           isUpdate: !isUpdate,
         });
-        if (this.props.user.msg === 'upload successfully!') {
+        if (
+          this.props.user.msg ===
+          'User is Updated without req file Successfully'
+        ) {
           Toast.show({
             type: 'success',
             position: 'top',
             text1: 'Success',
-            text2: 'Upload successfully',
+            text2: 'Updated successfully',
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        } else if (
+          this.props.user.msg === 'User is Updated with req file Successfully'
+        ) {
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Success',
+            text2: 'Updated successfully',
             visibilityTime: 1000,
             autoHide: true,
             topOffset: 30,
@@ -122,18 +139,35 @@ class EditProfile extends Component {
         username: values.userName,
         name: values.fullName,
         postCode: values.postCode,
+        phoneNumber: values.phoneNumber,
         picture: picture,
       };
-      this.props.changeUser(token, data, id).then(() => {
+      this.props.changeUser(token, data).then(() => {
         this.setState({
           isUpdate: !isUpdate,
         });
-        if (this.props.user.msg === 'upload successfully!') {
+        if (
+          this.props.user.msg ===
+          'User is Updated without req file Successfully'
+        ) {
           Toast.show({
             type: 'success',
             position: 'top',
             text1: 'Success',
-            text2: 'Upload successfully',
+            text2: 'Updated successfully',
+            visibilityTime: 1000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+          });
+        } else if (
+          this.props.user.msg === 'User is Updated with req file Successfully'
+        ) {
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Success',
+            text2: 'Updated successfully',
             visibilityTime: 1000,
             autoHide: true,
             topOffset: 30,
@@ -169,9 +203,9 @@ class EditProfile extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const {token, id} = this.props.auth;
+    const {token} = this.props.auth;
     if (prevState.isUpdate !== this.state.isUpdate) {
-      this.props.getUserById(token, id);
+      this.props.getUserById(token);
     }
   }
 
@@ -179,6 +213,9 @@ class EditProfile extends Component {
     const validationSchema = Yup.object().shape({
       email: Yup.string()
         .email('Invalid Email!!')
+        .required('Must fill in the form'),
+      phoneNumber: Yup.string()
+        .min(11, 'Minimum 11 Digits!!')
         .required('Must fill in the form'),
       userName: Yup.string()
         .min(8, 'Minimum 8 Characters!')
@@ -242,6 +279,7 @@ class EditProfile extends Component {
             validationSchema={validationSchema}
             initialValues={{
               email: `${this.props.user.data.email}`,
+              phoneNumber: `${this.props.user.data.phoneNumber}`,
               userName: `${this.props.user.data.username}`,
               fullName: `${this.props.user.data.name}`,
               city: `${this.props.user.data.city}`,
@@ -268,6 +306,19 @@ class EditProfile extends Component {
                   {errors.email ? (
                     <Text style={[styles.textError, styles.fontRegular]}>
                       {errors.email}
+                    </Text>
+                  ) : null}
+                  <TextInput
+                    style={[styles.textInput, styles.fontSemiBold]}
+                    keyboardType="number-pad"
+                    placeholder="Phone Number"
+                    onChangeText={handleChange('phoneNumber')}
+                    onBlur={handleBlur('phoneNumber')}
+                    value={values.phoneNumber}
+                  />
+                  {errors.phoneNumber ? (
+                    <Text style={[styles.textError, styles.fontRegular]}>
+                      {errors.phoneNumber}
                     </Text>
                   ) : null}
                   <Text style={[styles.fontSemiBold, styles.font16]}>
