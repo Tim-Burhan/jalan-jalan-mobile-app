@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import RNBootSplash from 'react-native-bootsplash';
 
 import CardHome from '../components/CardHome';
 import ChatButton from '../components/ChatButton';
@@ -29,8 +30,8 @@ class Home extends Component {
   }
 
   getDataUser = () => {
-    const {token, id} = this.props.auth;
-    this.props.getUserById(token, id);
+    const {token} = this.props.auth;
+    this.props.getUserById(token);
   };
 
   getDestination = async () => {
@@ -49,7 +50,12 @@ class Home extends Component {
   componentDidMount() {
     this.getDataUser();
     this.getDestination();
+    RNBootSplash.hide({fade: true});
   }
+
+  // componentDidUpdate(prevProps) {
+  //   console.log(prevProps);
+  // }
 
   render() {
     return (
@@ -108,7 +114,16 @@ class Home extends Component {
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
                   data={this.props.destination.data}
-                  renderItem={({item}) => <CardHome data={item} />}
+                  renderItem={({item}) => (
+                    <CardHome
+                      data={item}
+                      func={() =>
+                        this.props.navigation.navigate('searchResults', {
+                          search: item.destination_country,
+                        })
+                      }
+                    />
+                  )}
                 />
               </View>
             </View>

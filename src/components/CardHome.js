@@ -37,7 +37,7 @@ const CardHome = props => {
               </Text>
             </View>
             <View style={styles.wrapperButton}>
-              <TouchableOpacity style={styles.buttonCard}>
+              <TouchableOpacity onPress={props.func} style={styles.buttonCard}>
                 <MaterialIcons
                   name="arrow-forward-ios"
                   color="#fff"
