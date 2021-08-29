@@ -9,6 +9,8 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-toast-message';
@@ -21,7 +23,9 @@ import {
   getBookingUser,
   getBookingUserId,
   confirmPayment,
+  deleteBooking,
 } from '../redux/actions/transaction';
+import {authLogout} from '../redux/actions/auth';
 
 class MyBooking extends Component {
   constructor(props) {
@@ -31,16 +35,48 @@ class MyBooking extends Component {
       isLoading: true,
       isUpdate: false,
       loading: true,
+      refreshing: false,
     };
   }
 
   getBookingUser = () => {
     const {token} = this.props.auth;
     this.props.getBookingUser(token).then(() => {
+      if (this.props.transaction.errMsg === 'Session expired, please login!') {
+        this.props.authLogout();
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: `${this.props.transaction.errMsg}`,
+          visibilityTime: 1000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      }
       this.setState({
         loading: false,
       });
     });
+  };
+
+  onRefresh = () => {
+    this.setState(
+      {
+        refreshing: true,
+      },
+      () => {
+        if (this.state.refreshing === true) {
+          this.getBookingUser();
+        }
+      },
+    );
+    setTimeout(() => {
+      this.setState({
+        refreshing: false,
+      });
+    }, 1000);
   };
 
   payment = id => {
@@ -76,6 +112,39 @@ class MyBooking extends Component {
     });
   };
 
+  delete = id => {
+    const {token} = this.props.auth;
+    this.props.deleteBooking(id, token).then(() => {
+      this.setState({
+        modalVisible: false,
+        isUpdate: !this.state.isUpdate,
+      });
+      if (this.props.transaction.errMsg === '') {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: 'Delete success',
+          visibilityTime: 1000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: `${this.props.transaction.errMsg}`,
+          visibilityTime: 1000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      }
+    });
+  };
+
   confirmPayment = id => {
     Alert.alert('Confirm Payment', 'Do you want to pay it?', [
       {
@@ -85,6 +154,19 @@ class MyBooking extends Component {
       {
         text: 'Yes',
         onPress: () => this.payment(id),
+      },
+    ]);
+  };
+
+  confirmDelete = id => {
+    Alert.alert('Delete Book', 'Do you want to delete it?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: () => this.delete(id),
       },
     ]);
   };
@@ -118,7 +200,14 @@ class MyBooking extends Component {
       <>
         {this.state.loading === false ? (
           <View style={styles.wrapper}>
-            <View style={styles.wrapperHeader}>
+            <ScrollView
+              contentContainerStyle={styles.wrapperHeader}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />
+              }>
               <View style={styles.wrapperNav}>
                 <Text style={[styles.fontBold, styles.title]}>My Booking</Text>
                 <ChatButton
@@ -132,147 +221,197 @@ class MyBooking extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </ScrollView>
             <View style={styles.wrapperContent}>
-              <FlatList
-                style={styles.flatList}
-                data={this.props.transaction.data}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item}) => (
-                  <>
-                    <TouchableOpacity
-                      onPress={() =>
-                        this.props.navigation.navigate('BookingDetail', {
-                          id: item.id,
-                        })
-                      }>
-                      <CardBooking
-                        data={item}
-                        func={() => this.setModalVisible(true, item.id)}
-                      />
-                    </TouchableOpacity>
-                    <Modal
-                      animationType="slide"
-                      transparent={true}
-                      visible={modalVisible}
-                      onRequestClose={() => {
-                        this.setModalVisible(
-                          !modalVisible,
-                          this.props.transaction.detailData[0].id,
-                        );
-                      }}>
-                      <View style={styles.centeredView}>
-                        {this.state.isLoading === false ? (
-                          <View style={styles.modalView}>
-                            <View style={styles.modalTop}>
-                              <Text style={styles.fontRegular}>
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .day
-                                }
-                                ,{' '}
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .date
-                                }{' '}
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .month
-                                }{' '}
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .year
-                                }{' '}
-                                -{' '}
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .time_leave
-                                }
-                              </Text>
-                              <View style={styles.wrapperDes}>
-                                <Text
-                                  style={[styles.fontSemiBold, styles.font20]}>
+              {this.props.transaction.data.length > 0 ? (
+                <FlatList
+                  style={styles.flatList}
+                  data={this.props.transaction.data}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({item}) => (
+                    <>
+                      {item.deletedBy === 0 && (
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.props.navigation.navigate('BookingDetail', {
+                              id: item.id,
+                            })
+                          }>
+                          <CardBooking
+                            data={item}
+                            func={() => this.setModalVisible(true, item.id)}
+                          />
+                        </TouchableOpacity>
+                      )}
+                      <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                          this.setModalVisible(
+                            !modalVisible,
+                            this.props.transaction.detailData[0].id,
+                          );
+                        }}>
+                        <View style={styles.centeredView}>
+                          {this.state.isLoading === false ? (
+                            <View style={styles.modalView}>
+                              <View style={styles.modalTop}>
+                                <Text style={styles.fontRegular}>
                                   {
                                     this.props.transaction.detailData[0].product
-                                      .destination.base_country_code
+                                      .day
                                   }
-                                  {/* FRM */}
-                                </Text>
-                                <Image
-                                  style={styles.logoGrey}
-                                  source={logoGrey}
-                                />
-                                <Text
-                                  style={[styles.fontSemiBold, styles.font20]}>
+                                  ,{' '}
                                   {
                                     this.props.transaction.detailData[0].product
-                                      .destination.destination_country_code
+                                      .date
+                                  }{' '}
+                                  {
+                                    this.props.transaction.detailData[0].product
+                                      .month
+                                  }{' '}
+                                  {
+                                    this.props.transaction.detailData[0].product
+                                      .year
+                                  }{' '}
+                                  -{' '}
+                                  {
+                                    this.props.transaction.detailData[0].product
+                                      .time_leave
                                   }
-                                  {/* TO */}
                                 </Text>
+                                <View style={styles.wrapperDes}>
+                                  <Text
+                                    style={[
+                                      styles.fontSemiBold,
+                                      styles.font20,
+                                    ]}>
+                                    {
+                                      this.props.transaction.detailData[0]
+                                        .product.destination.base_country_code
+                                    }
+                                    {/* FRM */}
+                                  </Text>
+                                  <Image
+                                    style={styles.logoGrey}
+                                    source={logoGrey}
+                                  />
+                                  <Text
+                                    style={[
+                                      styles.fontSemiBold,
+                                      styles.font20,
+                                    ]}>
+                                    {
+                                      this.props.transaction.detailData[0]
+                                        .product.destination
+                                        .destination_country_code
+                                    }
+                                    {/* TO */}
+                                  </Text>
+                                </View>
+                                <Text style={[styles.fontRegular, styles.grey]}>
+                                  {
+                                    this.props.transaction.detailData[0].product
+                                      .airline.name
+                                  }
+                                  ,{' '}
+                                  {
+                                    this.props.transaction.detailData[0].product
+                                      .code
+                                  }
+                                </Text>
+                                <View style={styles.label}>
+                                  <Text
+                                    style={[styles.fontSemiBold, styles.white]}>
+                                    Waiting for payment
+                                  </Text>
+                                </View>
                               </View>
-                              <Text style={[styles.fontRegular, styles.grey]}>
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .airline.name
+                              {this.props.transaction.detailData[0].status ===
+                                0 && (
+                                <TouchableOpacity
+                                  onPress={() =>
+                                    this.confirmPayment(
+                                      this.props.transaction.detailData[0].id,
+                                    )
+                                  }
+                                  style={[
+                                    styles.buttonConfirm,
+                                    styles.bgGreen,
+                                  ]}>
+                                  <Text
+                                    style={[
+                                      styles.fontSemiBold,
+                                      styles.font20,
+                                      styles.white,
+                                    ]}>
+                                    Confirm Payment
+                                  </Text>
+                                </TouchableOpacity>
+                              )}
+                              {this.props.transaction.detailData[0]
+                                .deletedBy === 0 && (
+                                <TouchableOpacity
+                                  onPress={() =>
+                                    this.confirmDelete(
+                                      this.props.transaction.detailData[0].id,
+                                    )
+                                  }
+                                  style={[
+                                    styles.buttonConfirm,
+                                    styles.bgOrange,
+                                  ]}>
+                                  <Text
+                                    style={[
+                                      styles.fontSemiBold,
+                                      styles.font20,
+                                      styles.white,
+                                    ]}>
+                                    Delete Booking
+                                  </Text>
+                                </TouchableOpacity>
+                              )}
+                              <TouchableOpacity
+                                onPress={() =>
+                                  this.setModalVisible(
+                                    !modalVisible,
+                                    this.props.transaction.detailData[0].id,
+                                  )
                                 }
-                                ,{' '}
-                                {
-                                  this.props.transaction.detailData[0].product
-                                    .code
-                                }
-                              </Text>
-                              <View style={styles.label}>
+                                style={[styles.buttonConfirm, styles.bgBlue]}>
                                 <Text
-                                  style={[styles.fontSemiBold, styles.white]}>
-                                  Waiting for payment
+                                  style={[
+                                    styles.fontRegular,
+                                    styles.font20,
+                                    styles.white,
+                                  ]}>
+                                  Close
                                 </Text>
-                              </View>
+                              </TouchableOpacity>
                             </View>
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.confirmPayment(
-                                  this.props.transaction.detailData[0].id,
-                                )
-                              }
-                              style={[styles.buttonConfirm, styles.bgGreen]}>
-                              <Text
-                                style={[
-                                  styles.fontSemiBold,
-                                  styles.font20,
-                                  styles.white,
-                                ]}>
-                                Confirm Payment
-                              </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.setModalVisible(
-                                  !modalVisible,
-                                  this.props.transaction.detailData[0].id,
-                                )
-                              }
-                              style={[styles.buttonConfirm, styles.bgBlue]}>
-                              <Text
-                                style={[
-                                  styles.fontRegular,
-                                  styles.font20,
-                                  styles.white,
-                                ]}>
-                                Close
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        ) : (
-                          <>
-                            <Text>Loading</Text>
-                          </>
-                        )}
-                      </View>
-                    </Modal>
-                  </>
-                )}
-              />
+                          ) : (
+                            <>
+                              <Text>Loading</Text>
+                            </>
+                          )}
+                        </View>
+                      </Modal>
+                    </>
+                  )}
+                />
+              ) : (
+                <>
+                  <MaterialCommunityIcons
+                    color={'#595959'}
+                    name="ticket-account"
+                    size={80}
+                  />
+                  <Text style={[styles.fontSemiBold, styles.font20]}>
+                    Booking Ticket Now!
+                  </Text>
+                </>
+              )}
             </View>
           </View>
         ) : (
@@ -290,7 +429,13 @@ const mapStateToProps = state => ({
   transaction: state.transaction,
 });
 
-const mapDispatchToProps = {getBookingUser, getBookingUserId, confirmPayment};
+const mapDispatchToProps = {
+  getBookingUser,
+  getBookingUserId,
+  confirmPayment,
+  authLogout,
+  deleteBooking,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyBooking);
 
@@ -316,6 +461,9 @@ const styles = StyleSheet.create({
   bgBlue: {
     backgroundColor: '#2196F3',
   },
+  bgOrange: {
+    backgroundColor: '#FF7F23',
+  },
   white: {
     color: '#fff',
   },
@@ -340,6 +488,7 @@ const styles = StyleSheet.create({
   wrapperContent: {
     flex: 12,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   wrapperNav: {
     flexDirection: 'row',

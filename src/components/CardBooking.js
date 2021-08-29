@@ -51,11 +51,11 @@ const CardBooking = props => {
               </Text>
             </TouchableOpacity>
           ) : (
-            <View style={styles.labelGreen}>
+            <TouchableOpacity onPress={props.func} style={styles.labelGreen}>
               <Text style={[styles.fontSemiBold, styles.white]}>
                 Payment Successfully
               </Text>
-            </View>
+            </TouchableOpacity>
           )}
         </View>
       </ImageBackground>
