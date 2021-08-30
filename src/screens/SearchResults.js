@@ -6,6 +6,8 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Modal,
+  Alert,
 } from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,6 +28,11 @@ class SearchResult extends Component {
     filterArrive1: '',
     filterAirline: '',
     page: 1,
+    modalVisible: false,
+  };
+
+  setModalVisible = visible => {
+    this.setState({modalVisible: visible});
   };
 
   search = async () => {
@@ -55,8 +62,20 @@ class SearchResult extends Component {
   }
 
   render() {
+    const {modalVisible} = this.state;
     return (
       <View style={styles.parent}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView} />
+          </View>
+        </Modal>
         <View style={styles.nav}>
           {/* <View style={styles.wrap1}>
             <Text style={styles.h1}> Monday, 20 July ‘20 </Text>
@@ -92,10 +111,12 @@ class SearchResult extends Component {
           <View>
             <Text style={styles.text6}>Any flight found</Text>
           </View>
-          <View style={styles.wrap6}>
+          <TouchableOpacity
+            onPress={() => this.setModalVisible(true)}
+            style={styles.wrap6}>
             <Text style={styles.text7}>Filter</Text>
             <Icon2 name="select-arrows" color="#000" size={25} />
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* <View style={styles.boxrow}>
@@ -374,5 +395,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  modalView: {
+    width: '100%',
+    height: '50%',
+    backgroundColor: 'white',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    padding: '10%',
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.8,
+    elevation: 5,
   },
 });

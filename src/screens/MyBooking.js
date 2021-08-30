@@ -173,14 +173,17 @@ class MyBooking extends Component {
 
   setModalVisible = (visible, id) => {
     const {token} = this.props.auth;
-    this.setState({
-      isLoading: true,
-    });
     this.props.getBookingUserId(token, id).then(() => {
-      this.setState({
-        modalVisible: visible,
-        isLoading: false,
-      });
+      this.setState(
+        {
+          isLoading: false,
+        },
+        () => {
+          this.setState({
+            modalVisible: visible,
+          });
+        },
+      );
     });
   };
 
@@ -244,7 +247,7 @@ class MyBooking extends Component {
                         </TouchableOpacity>
                       )}
                       <Modal
-                        animationType="slide"
+                        animationType="fade"
                         transparent={true}
                         visible={modalVisible}
                         onRequestClose={() => {
@@ -391,9 +394,7 @@ class MyBooking extends Component {
                               </TouchableOpacity>
                             </View>
                           ) : (
-                            <>
-                              <Text>Loading</Text>
-                            </>
+                            <View />
                           )}
                         </View>
                       </Modal>

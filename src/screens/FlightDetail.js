@@ -103,13 +103,13 @@ class FlightDetail extends Component {
             <View style={styles.shadowbox}>
               <View style={styles.rowbox}>
                 <View>
-                  <Text style={styles.city}>
+                  <Text style={[styles.city, styles.fontSemiBold]}>
                     {
                       this.props.product.detailData.destination
                         .base_country_code
                     }
                   </Text>
-                  <Text style={styles.h1}>
+                  <Text style={[styles.h1, styles.fontRegular]}>
                     {this.props.product.detailData.time_leave}
                   </Text>
                 </View>
@@ -117,13 +117,13 @@ class FlightDetail extends Component {
                   <Image style={styles.vector} source={vector} />
                 </View>
                 <View>
-                  <Text style={styles.city}>
+                  <Text style={[styles.city, styles.fontSemiBold]}>
                     {
                       this.props.product.detailData.destination
                         .destination_country_code
                     }
                   </Text>
-                  <Text style={styles.h2}>
+                  <Text style={[styles.h2, styles.fontRegular]}>
                     {this.props.product.detailData.time_arrive}
                   </Text>
                 </View>
@@ -167,20 +167,30 @@ class FlightDetail extends Component {
               </View>
               <View style={styles.wrap3}>
                 <View>
-                  <Text style={styles.code}>Code</Text>
-                  <Text>{this.props.product.detailData.code}</Text>
+                  <Text style={[styles.code, styles.fontRegular]}>Code</Text>
+                  <Text style={styles.fontSemiBold}>
+                    {this.props.product.detailData.code}
+                  </Text>
                 </View>
                 <View>
-                  <Text style={styles.code}>Class</Text>
-                  <Text>{this.props.product.detailData.class.name}</Text>
+                  <Text style={[styles.code, styles.fontRegular]}>Class</Text>
+                  <Text style={styles.fontSemiBold}>
+                    {this.props.product.detailData.class.name}
+                  </Text>
                 </View>
                 <View>
-                  <Text style={styles.code}>Terminal</Text>
-                  <Text>{this.props.product.detailData.terminal}</Text>
+                  <Text style={[styles.code, styles.fontRegular]}>
+                    Terminal
+                  </Text>
+                  <Text style={styles.fontSemiBold}>
+                    {this.props.product.detailData.terminal}
+                  </Text>
                 </View>
                 <View>
-                  <Text style={styles.code}>Gate</Text>
-                  <Text>{this.props.product.detailData.gate}</Text>
+                  <Text style={[styles.code, styles.fontRegular]}>Gate</Text>
+                  <Text style={styles.fontSemiBold}>
+                    {this.props.product.detailData.gate}
+                  </Text>
                 </View>
               </View>
               <View style={styles.wrap9}>
@@ -274,6 +284,16 @@ const mapDispatchToProps = {getProductById, addBooking, getBookingUser};
 export default connect(mapStateToProps, mapDispatchToProps)(FlightDetail);
 
 const styles = StyleSheet.create({
+  fontBold: {
+    fontFamily: 'Poppins-Bold',
+  },
+  fontRegular: {
+    fontFamily: 'Poppins-Regular',
+  },
+  fontSemiBold: {
+    fontFamily: 'Poppins-SemiBold',
+  },
+
   parent: {
     flex: 1,
     backgroundColor: 'white',
@@ -375,7 +395,7 @@ const styles = StyleSheet.create({
   wrap9: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 25,
+    marginVertical: 15,
   },
   burgerWrap: {
     backgroundColor: '#6DDA6B',
